@@ -1,8 +1,6 @@
 # J4CMIS — Justice for Children Management Information System
 
-Django + Postgres implementation of the J4C MIS, built against
-**J4C-MIS-SRS.md v2.2 (aligned to Use Case Specification v4)** — the
-project's confirmed source of truth per `J4C-MIS-Project-Summary.md`.
+Django + Postgres implementation of the J4C MIS `J4C-MIS-Project-Summary.md`.
 
 This scaffold was originally built from `erd.drawio`, which turned out to
 be an older, superseded version (civil cases removed, 2-way case type, a
