@@ -70,3 +70,18 @@ htmlcov/
 
 # CI/CD
 .github/workflows/
+
+# Large documentation files
+*.docx
+*.xlsx
+*.pptx
+*.pdf
+*.zip
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.drawio
+
+# UI mockups (large)
+/ui/
