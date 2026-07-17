@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>J4CMIS Dashboard</title>
+  <style>
+    body { font-family: -apple-system, Arial, sans-serif; margin: 0; background: #f4f5f7; color: #222; }
+    header { background: #1f2d3d; color: #fff; padding: 16px 24px; }
+    header a { color: #fff; text-decoration: none; }
+    main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+    .cards { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+    .card { background: #fff; border-radius: 6px; padding: 16px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.1); min-width: 160px; }
+    .card .num { font-size: 28px; font-weight: 700; }
+    .card .label { color: #666; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+    .flag { color: #b85450; }
+    table { width: 100%; border-collapse: collapse; background: #fff; margin-bottom: 24px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; font-size: 14px; }
+    th { background: #fafafa; }
+    h2 { font-size: 16px; margin-top: 32px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; }
+    .badge-incomplete { background: #fff2cc; color: #7a5c00; }
+    .badge-complete { background: #d5e8d4; color: #2e5d2e; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>J4CMIS</strong> — Justice for Children Management Information System
+    &nbsp;|&nbsp; <a href="/admin/">Admin</a>
+  </header>
+  <main>
+    <div class="cards">
+      <div class="card"><div class="num">{{ total_cases }}</div><div class="label">Total cases</div></div>
+      <div class="card"><div class="num">{{ open_cases }}</div><div class="label">Open cases</div></div>
+      <div class="card"><div class="num">{{ total_children }}</div><div class="label">Children on file</div></div>
+      <div class="card"><div class="num flag">{{ incomplete_cases }}</div><div class="label">Incomplete records</div></div>
+    </div>
+
+    <h2>Recent cases</h2>
+    <table>
+      <tr><th>Case #</th><th>Child</th><th>Type</th><th>Status</th><th>Data status</th><th>Registered</th></tr>
+      {% for c in recent_cases %}
+      <tr>
+        <td>{{ c.case_number }}</td>
+        <td>{{ c.child }}</td>
+        <td>{{ c.get_case_category_display }}</td>
+        <td>{{ c.status }}</td>
+        <td><span class="badge {% if c.incomplete_data_flag %}badge-incomplete{% else %}badge-complete{% endif %}">{% if c.incomplete_data_flag %}Incomplete{% else %}Complete{% endif %}</span></td>
+        <td>{{ c.reg_datetime|date:"d M Y" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">No cases yet.</td></tr>
+      {% endfor %}
+    </table>
+
+    <h2>Records flagged incomplete (need follow-up)</h2>
+    <table>
+      <tr><th>Case #</th><th>Child</th><th>Missing fields</th></tr>
+      {% for c in incomplete_records %}
+      <tr><td>{{ c.case_number }}</td><td>{{ c.child }}</td><td>{{ c.missing_fields|default:"—" }}</td></tr>
+      {% empty %}
+      <tr><td colspan="3">None outstanding.</td></tr>
+      {% endfor %}
+    </table>
+
+    <h2>Upcoming court hearings</h2>
+    <table>
+      <tr><th>Case #</th><th>Court</th><th>Hearing date</th><th>Status</th></tr>
+      {% for h in upcoming_hearings %}
+      <tr><td>{{ h.case.case_number }}</td><td>{{ h.court_name }}</td><td>{{ h.hearing_date }}</td><td>{{ h.case_status }}</td></tr>
+      {% empty %}
+      <tr><td colspan="4">None scheduled.</td></tr>
+      {% endfor %}
+    </table>
+  </main>
+</body>
+</html>
